@@ -1,0 +1,17 @@
+{
+    "name": "oyeaussie/historical-etfs-au",
+    "description": "Get historical etfs data from yticker (Australia)",
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "require": {
+        "nesbot/carbon": "^3.10",
+        "league/flysystem": "^3.30",
+        "guzzlehttp/guzzle": "^7.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hetfs\\": "../src"
+        }
+    }
+}
