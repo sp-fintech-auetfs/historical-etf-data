@@ -188,11 +188,13 @@ class Extractor
                 return json_decode($response->getBody()->getContents(), true);
             }
         } catch (\throwable $e) {
-            if (str_contains($e->getMessage(), 'delisted')) {
-                return false;
+            try {
+                $this->localContent->write('data/' . strtoupper($ticker) . '.json', json_encode(['error' => $e->getMessage()]));
+            } catch (FilesystemException | UnableToWriteFile | \throwable $e) {
+                //Do nothing
             }
 
-            throw new \Exception('yticker for ' . $ticker . ' has incorrect data');
+            return false;
         }
     }
 }
