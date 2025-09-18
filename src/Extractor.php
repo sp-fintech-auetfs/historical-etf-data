@@ -167,7 +167,7 @@ class Extractor
                             throw $e;
                         }
 
-                        echo 'Processed ' . $yticker . ' successfully';
+                        echo 'Processed ' . $ticker . ' successfully';
 
                         sleep(1);
                     }
