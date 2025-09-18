@@ -11,6 +11,7 @@ on:
     paths:
       - '**.json'
       - '**.yml'
+      - '**.php'
 jobs:
   export:
     name: Extract Data
