@@ -167,8 +167,6 @@ class Extractor
                             throw $e;
                         }
 
-                        echo 'Processed ' . $ticker . ' successfully';
-
                         sleep(1);
                     }
                 }

@@ -21,11 +21,11 @@ jobs:
         php-version: [8.3]
       fail-fast: false
     steps:
-      - name: Checkout
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
-          submodules: true
-          ref: ${{ github.head_ref }}
+          fetch-depth: 1
+          ref: 'main'
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -50,3 +50,5 @@ jobs:
         with:
           commit_message: Update Historical Data
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
