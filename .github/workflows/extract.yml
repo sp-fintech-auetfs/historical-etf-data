@@ -41,6 +41,7 @@ jobs:
         working-directory: ./src
         run: composer install
       - name: Grab yticker data from yahoo
+        working-directory: ./src
         run: php index.php
       - uses: stefanzweifel/git-auto-commit-action@v4
         id: commit
