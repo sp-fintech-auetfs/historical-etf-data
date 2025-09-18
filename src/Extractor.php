@@ -118,7 +118,7 @@ class Extractor
             }
 
             if (isset($ytickerData['chart']['result'][0]['meta']) && !$tickerFile) {
-                $period1 = $ytickerData['meta']['firstTradeDate'];
+                $period1 = $ytickerData['chart']['result'][0]['meta']['firstTradeDate'];
 
                 if (!$ytickerData = $this->getYtickerData($ticker, $period1, $period2)) {
                     continue;
