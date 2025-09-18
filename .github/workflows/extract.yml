@@ -10,6 +10,7 @@ on:
       - main
     paths:
       - '**.json'
+      - '**.yml'
 jobs:
   export:
     name: Extract Data
