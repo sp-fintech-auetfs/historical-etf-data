@@ -25,6 +25,8 @@ class Extractor
 
     protected $parsedCarbon = [];
 
+    protected $zip;
+
     public function __construct()
     {
         //Increase Exectimeout to 1 hours as this process takes time to extract and merge data.
@@ -66,10 +68,14 @@ class Extractor
         if (!$this->yticker) {
             throw new \Exception('yticker.json file not found or incorrect!');
         }
+
+        $this->zip = new \ZipArchive;
     }
 
     public function extract()
     {
+        $this->zip->open(__DIR__ . '/data/all.zip', $this->zip::CREATE);
+
         $this->parsedCarbon[$this->today->timestamp] = $this->today;
 
         $period1 = $this->today->copy()->subDay()->timestamp;
@@ -110,6 +116,8 @@ class Extractor
             }
 
             if ($period1 === $period2) {
+                $this->zip->addFile(__DIR__ . 'data/' . $ticker . '.json', $ticker . '.json');
+
                 continue;
             }
 
@@ -167,11 +175,15 @@ class Extractor
                             throw $e;
                         }
 
+                        $this->zip->addFile(__DIR__ . 'data/' . $ticker . '.json', $ticker . '.json');
+
                         sleep(1);
                     }
                 }
             }
         }
+
+        $this->zip->close();
     }
 
     protected function getYtickerData($ticker, $period1, $period2)
