@@ -1,9 +1,8 @@
 name: Extract yticker data from yahoo
 on:
   schedule:
-    # This runs at 6PM UTC
-    # = 11:30 IST
-    - cron: '0 18 * * *'
+    # Run cron every 12 hours.
+    - cron: '* */12 * * *'
   push:
     # or when we update yticker.json file
     branches:
