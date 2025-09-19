@@ -99,11 +99,11 @@ class Extractor
                         $this->parsedCarbon[$tickerFile['last_updated']] = \Carbon\Carbon::parse($tickerFile['last_updated']);
                     }
 
-                    if ($this->parsedCarbon[$tickerFile['last_updated']]->copy()->startOfDay()->timestamp === $period2) {
+                    if ($period1 = $this->parsedCarbon[$tickerFile['last_updated']]->copy()->startOfDay()->timestamp === $period2) {
+                        $this->zip->addFile(__DIR__ . '/../data/' . $ticker . '.json', $ticker . '.json');
+
                         continue;
                     }
-
-                    $period1 = $this->parsedCarbon[$tickerFile['last_updated']]->copy()->startOfDay()->timestamp;
                 }
 
                 if (isset($tickerFile['meta']['firstTradeDate']) && isset($tickerFile['quote']) && count($tickerFile['quote']) > 0) {
