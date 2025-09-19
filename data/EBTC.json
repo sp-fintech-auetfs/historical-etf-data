@@ -1,0 +1,1 @@
+{"error":"Client error: `GET https:\/\/query1.finance.yahoo.com\/v8\/finance\/chart\/EBTC.AX?events=capitalGain%7Cdiv%7Csplit&interval=1d&lang=en-AU&region=AU&period1=1733094000&period2=1758240000` resulted in a `404 Not Found` response:\n{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}\n"}
