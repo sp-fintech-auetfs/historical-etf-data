@@ -116,7 +116,7 @@ class Extractor
             }
 
             if ($period1 === $period2) {
-                $this->zip->addFile(__DIR__ . 'data/' . $ticker . '.json', $ticker . '.json');
+                $this->zip->addFile(__DIR__ . '/../data/' . $ticker . '.json', $ticker . '.json');
 
                 continue;
             }
@@ -175,7 +175,7 @@ class Extractor
                             throw $e;
                         }
 
-                        $this->zip->addFile(__DIR__ . 'data/' . $ticker . '.json', $ticker . '.json');
+                        $this->zip->addFile(__DIR__ . '/../data/' . $ticker . '.json', $ticker . '.json');
 
                         sleep(1);
                     }
