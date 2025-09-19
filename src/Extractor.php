@@ -74,7 +74,7 @@ class Extractor
 
     public function extract()
     {
-        $this->zip->open(__DIR__ . '/data/all.zip', $this->zip::CREATE);
+        $this->zip->open(__DIR__ . '/../data/all.zip', $this->zip::CREATE);
 
         $this->parsedCarbon[$this->today->timestamp] = $this->today;
 
