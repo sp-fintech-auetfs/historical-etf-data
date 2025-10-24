@@ -139,6 +139,8 @@ class Extractor
                 $ytickerCombined['meta'] = $ytickerData['chart']['result'][0]['meta'];
             }
 
+            $ytickerCombined['meta']['dividends'] = false;
+
             if (isset($ytickerData['chart']['result'][0]['timestamp']) && isset($ytickerData['chart']['result'][0]['indicators']['quote'][0]['close'])) {
                 $timestampKeyCount = count($ytickerData['chart']['result'][0]['timestamp']);
                 $timestampKeyCounter = 0;
@@ -161,6 +163,7 @@ class Extractor
                             isset($ytickerData['chart']['result'][0]['events']['dividends'][$timestamp]['amount'])
                         ) {
                             $ytickerCombined['quote'][$timestamp]['dividends_amount'] = $ytickerData['chart']['result'][0]['events']['dividends'][$timestamp]['amount'];
+                            $ytickerCombined['meta']['dividends'] = true;
                         }
                     }
 
