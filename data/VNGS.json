@@ -1,0 +1,1 @@
+{"error":"cURL error 28: Operation timed out after 2002 milliseconds with 0 bytes received (see https:\/\/curl.haxx.se\/libcurl\/c\/libcurl-errors.html) for https:\/\/query1.finance.yahoo.com\/v8\/finance\/chart\/VNGS.AX?events=capitalGain%7Cdiv%7Csplit&interval=1d&lang=en-AU&region=AU&period1=1523923200&period2=1761350400"}
