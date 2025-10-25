@@ -135,11 +135,16 @@ class Extractor
 
             $ytickerCombined = [];
 
-            if (isset($ytickerData['chart']['result'][0]['meta'])) {
-                $ytickerCombined['meta'] = $ytickerData['chart']['result'][0]['meta'];
+            if (!isset($ytickerData['chart']['result'][0]['meta'])) {
+                continue;
             }
 
+            $ytickerCombined['meta'] = $ytickerData['chart']['result'][0]['meta'];
             $ytickerCombined['meta']['dividends'] = false;
+
+            if (isset($ytickerData['chart']['result'][0]['events'])) {
+                $ytickerCombined['events'] = $ytickerData['chart']['result'][0]['events'];
+            }
 
             if (isset($ytickerData['chart']['result'][0]['timestamp']) && isset($ytickerData['chart']['result'][0]['indicators']['quote'][0]['close'])) {
                 $timestampKeyCount = count($ytickerData['chart']['result'][0]['timestamp']);
