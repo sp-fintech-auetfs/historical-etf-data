@@ -99,7 +99,9 @@ class Extractor
                         $this->parsedCarbon[$tickerFile['last_updated']] = \Carbon\Carbon::parse($tickerFile['last_updated']);
                     }
 
-                    if ($period1 = $this->parsedCarbon[$tickerFile['last_updated']]->copy()->startOfDay()->timestamp === $period2) {
+                    $period1 = $this->parsedCarbon[$tickerFile['last_updated']]->copy()->startOfDay()->timestamp;
+
+                    if ($period1 === $period2) {
                         $this->zip->addFile(__DIR__ . '/../data/' . $ticker . '.json', $ticker . '.json');
 
                         continue;
@@ -107,9 +109,9 @@ class Extractor
                 }
 
                 if (isset($tickerFile['meta']['firstTradeDate']) && isset($tickerFile['quote']) && count($tickerFile['quote']) > 0) {
-                    $firstQuote = array_shift($tickerFile['quote']);
+                    $firstQuote = array_slice($tickerFile['quote'], 0, 1);
 
-                    if ($firstQuote['timestamp'] !== $tickerFile['meta']['firstTradeDate']) {
+                    if ($firstQuote[0]['timestamp'] !== $tickerFile['meta']['firstTradeDate']) {
                         $period1 = $tickerFile['meta']['firstTradeDate'];
                     }
                 }
@@ -150,12 +152,20 @@ class Extractor
                 $timestampKeyCount = count($ytickerData['chart']['result'][0]['timestamp']);
                 $timestampKeyCounter = 0;
 
+                if ($tickerFile && isset($tickerFile['quote']) && count($tickerFile['quote']) > 0) {
+                    $ytickerCombined['quote'] = $tickerFile['quote'];
+                }
                 foreach ($ytickerData['chart']['result'][0]['timestamp'] as $timestampKey => $timestamp) {
                     if (!isset($this->parsedCarbon[$timestamp])) {
                         $this->parsedCarbon[$timestamp] = \Carbon\Carbon::parse($timestamp);
                     }
-
                     if ($ytickerData['chart']['result'][0]['indicators']['quote'][0]['open'][$timestampKey]) {
+                        if (isset($ytickerCombined['quote'][$timestamp])) {
+                            $timestampKeyCounter++;
+
+                            continue;
+                        }
+
                         $ytickerCombined['quote'][$timestamp]['timestamp'] = $timestamp;
                         $ytickerCombined['quote'][$timestamp]['date'] = $this->parsedCarbon[$timestamp]->toDateString();
                         $ytickerCombined['quote'][$timestamp]['open'] = $ytickerData['chart']['result'][0]['indicators']['quote'][0]['open'][$timestampKey];
