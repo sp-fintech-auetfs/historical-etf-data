@@ -1,1 +1,0 @@
-{"error":"Client error: `GET https:\/\/query1.finance.yahoo.com\/v8\/finance\/chart\/IQLT.AX?events=capitalGain%7Cdiv%7Csplit&interval=1d&lang=en-AU&region=AU&period1=&period2=1761436800` resulted in a `404 Not Found` response:\n{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}\n"}
