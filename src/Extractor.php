@@ -34,7 +34,7 @@ class Extractor
             set_time_limit(3600);
         }
 
-        $this->today = Carbon::today();
+        $this->today = \Carbon\Carbon::today(new \DateTimeZone('Australia/Melbourne'));
 
         $this->localContent = new Filesystem(
             new LocalFilesystemAdapter(
@@ -96,8 +96,9 @@ class Extractor
             if ($tickerFile) {
                 if (isset($tickerFile['last_updated'])) {
                     if (!isset($this->parsedCarbon[$tickerFile['last_updated']])) {
-                        $this->parsedCarbon[$tickerFile['last_updated']] = \Carbon\Carbon::parse($tickerFile['last_updated']);
+                        $this->parsedCarbon[$tickerFile['last_updated']] = (\Carbon\Carbon::parse($tickerFile['last_updated']))->setTimezone('Australia/Melbourne');
                     }
+
 
                     $period1 = $this->parsedCarbon[$tickerFile['last_updated']]->copy()->startOfDay()->timestamp;
 
@@ -157,8 +158,9 @@ class Extractor
                 }
                 foreach ($ytickerData['chart']['result'][0]['timestamp'] as $timestampKey => $timestamp) {
                     if (!isset($this->parsedCarbon[$timestamp])) {
-                        $this->parsedCarbon[$timestamp] = \Carbon\Carbon::parse($timestamp);
+                        $this->parsedCarbon[$timestamp] = (\Carbon\Carbon::parse($timestamp))->setTimezone('Australia/Melbourne');
                     }
+
                     if ($ytickerData['chart']['result'][0]['indicators']['quote'][0]['open'][$timestampKey]) {
                         if (isset($ytickerCombined['quote'][$timestamp])) {
                             $timestampKeyCounter++;
