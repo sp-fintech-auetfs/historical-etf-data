@@ -156,10 +156,11 @@ class Extractor
                 if ($tickerFile && isset($tickerFile['quote']) && count($tickerFile['quote']) > 0) {
                     $ytickerCombined['quote'] = $tickerFile['quote'];
                 }
+
                 foreach ($ytickerData['chart']['result'][0]['timestamp'] as $timestampKey => $timestamp) {
-                    if (!isset($this->parsedCarbon[$timestamp])) {
-                        $this->parsedCarbon[$timestamp] = (\Carbon\Carbon::parse($timestamp))->setTimezone('Australia/Melbourne');
-                    }
+                    $timestampStartOfDay = (\Carbon\Carbon::parse($timestamp))->setTimezone('Australia/Melbourne')->startOfDay();
+
+                    $timestamp = $timestampStartOfDay->timestamp;
 
                     if ($ytickerData['chart']['result'][0]['indicators']['quote'][0]['open'][$timestampKey]) {
                         if (isset($ytickerCombined['quote'][$timestamp])) {
@@ -169,7 +170,7 @@ class Extractor
                         }
 
                         $ytickerCombined['quote'][$timestamp]['timestamp'] = $timestamp;
-                        $ytickerCombined['quote'][$timestamp]['date'] = $this->parsedCarbon[$timestamp]->toDateString();
+                        $ytickerCombined['quote'][$timestamp]['date'] = $timestampStartOfDay->toDateString();
                         $ytickerCombined['quote'][$timestamp]['open'] = $ytickerData['chart']['result'][0]['indicators']['quote'][0]['open'][$timestampKey];
                         $ytickerCombined['quote'][$timestamp]['close'] = $ytickerData['chart']['result'][0]['indicators']['quote'][0]['close'][$timestampKey];
                         $ytickerCombined['quote'][$timestamp]['adjclose'] = $ytickerData['chart']['result'][0]['indicators']['adjclose'][0]['adjclose'][$timestampKey];
