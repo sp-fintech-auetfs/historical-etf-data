@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout main branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
           ref: 'main'
@@ -33,7 +33,7 @@ jobs:
           coverage: none
           ini-values: "post_max_size=256M, memory_limit=512M" #optional
       - name: Cache Composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: src/vendor
           key: ${{ runner.os }}-composer-${{ hashFiles('src/composer.lock') }}
@@ -44,7 +44,7 @@ jobs:
       - name: Grab yticker data from yahoo
         working-directory: ./src
         run: php index.php
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v6
         id: commit
         with:
           commit_message: Update Historical Data
