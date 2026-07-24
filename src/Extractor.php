@@ -13,6 +13,8 @@ use League\Flysystem\UnableToCheckExistence;
 
 class Extractor
 {
+    protected $now;
+
     protected $today;
 
     protected $localContent;
@@ -34,7 +36,9 @@ class Extractor
             set_time_limit(3600);
         }
 
-        $this->today = \Carbon\Carbon::today(new \DateTimeZone('Australia/Melbourne'));
+        $this->now = \Carbon\Carbon::now()->setTimezone('Australia/Melbourne');
+
+        $this->today = \Carbon\Carbon::today()->setTimezone('Australia/Melbourne')->startOfDay();
 
         $this->localContent = new Filesystem(
             new LocalFilesystemAdapter(
@@ -76,10 +80,9 @@ class Extractor
     {
         $this->zip->open(__DIR__ . '/../data/all.zip', $this->zip::CREATE);
 
-        $this->parsedCarbon[$this->today->timestamp] = $this->today;
-
         $period1 = $this->today->copy()->subDay()->timestamp;
-        $period2 = $this->today->timestamp;
+        $today = $this->today->timestamp;
+        $period2 = $this->now->timestamp;
 
         foreach ($this->yticker as $ticker) {
             $tickerFile = null;
@@ -95,33 +98,26 @@ class Extractor
 
             if ($tickerFile) {
                 if (isset($tickerFile['last_updated'])) {
-                    if (!isset($this->parsedCarbon[$tickerFile['last_updated']])) {
-                        $this->parsedCarbon[$tickerFile['last_updated']] = (\Carbon\Carbon::parse($tickerFile['last_updated']))->setTimezone('Australia/Melbourne');
+                    $period1 = (\Carbon\Carbon::parse($tickerFile['last_updated']))->setTimezone('Australia/Melbourne')->startOfDay()->timestamp;
+
+                    if ($period1 === $today) {
+                        $this->zip->addFile(__DIR__ . '/../data/' . $ticker . '.json', $ticker . '.json');
+
+                        continue;
+                    }
+                } else if (isset($tickerFile['meta']['firstTradeDate']) && isset($tickerFile['quote']) && count($tickerFile['quote']) > 0) {
+                    $firstQuote = array_slice($tickerFile['quote'], 0, 1);
+
+                    if ($firstQuote[0]['timestamp'] !== $tickerFile['meta']['firstTradeDate']) {
+                        $period1 = (\Carbon\Carbon::parse($tickerFile['meta']['firstTradeDate']))->setTimezone('Australia/Melbourne')->startOfDay()->timestamp;
                     }
 
-
-                    $period1 = $this->parsedCarbon[$tickerFile['last_updated']]->copy()->startOfDay()->timestamp;
-
-                    if ($period1 === $period2) {
+                    if ($period1 === $today) {
                         $this->zip->addFile(__DIR__ . '/../data/' . $ticker . '.json', $ticker . '.json');
 
                         continue;
                     }
                 }
-
-                if (isset($tickerFile['meta']['firstTradeDate']) && isset($tickerFile['quote']) && count($tickerFile['quote']) > 0) {
-                    $firstQuote = array_slice($tickerFile['quote'], 0, 1);
-
-                    if ($firstQuote[0]['timestamp'] !== $tickerFile['meta']['firstTradeDate']) {
-                        $period1 = $tickerFile['meta']['firstTradeDate'];
-                    }
-                }
-            }
-
-            if ($period1 === $period2) {
-                $this->zip->addFile(__DIR__ . '/../data/' . $ticker . '.json', $ticker . '.json');
-
-                continue;
             }
 
             if (!$ytickerData = $this->getYtickerData($ticker, $period1, $period2)) {
